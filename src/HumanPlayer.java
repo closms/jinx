@@ -31,7 +31,7 @@ public class HumanPlayer
     }
 
 	/**
-	 * blocks until the player clicks a valid hex cell, the selects cell
+	 * Block until the player clicks a valid hex cell.  The selected cell
 	 * is returned.
 	 */
 

@@ -313,8 +313,6 @@ public class HexCanvas extends JComponent
 
 	public void paint( Graphics g )
 	{
-		System.out.println("HexCanvas::paint() called");
-		System.out.println("double buffer:" + isDoubleBuffered() );
 		if( iWidth != (getWidth()-1) || iHeight != (getHeight()-1) || bReset ) {
 			bReset = false;
 			iWidth = getWidth()-1;

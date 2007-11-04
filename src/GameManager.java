@@ -9,12 +9,13 @@ import java.lang.*;
 import java.awt.*;
 
 /**
- * The GameManager class drives the game.  The GameManager controls which player plays
- * next and calls the nextMove() method of the appropriate player.  The GameManager also
- * handles the requests to undo a move.
+ * The GameManager class drives the game.  The GameManager controls
+ * which player plays next and calls the nextMove() method of the
+ * appropriate player.  The GameManager also handles the requests to
+ * undo a move.
  * <p>
- * There is one GameManager per game.  When a new game is started, the old game manager is
- * stopped and a new game manager is created.
+ * There is one GameManager per game.  When a new game is started, the
+ * old game manager is stopped and a new game manager is created.
  */
 
 public class GameManager extends Thread {
@@ -25,7 +26,6 @@ public class GameManager extends Thread {
 
 	HexCanvas hexCanvas = null;
 
-//	GameBoard gameBoard = null;
 	GameState gameState = null;
 
 	PlayerPanel playerPanel = null;
@@ -35,14 +35,15 @@ public class GameManager extends Thread {
 	/**
 	 * Create a new game manager.
 	 *
-	 * The game manager needs a reference to the HexCanvas so it can pass the
-	 * HexCanvas to a HumanPlayer object, if one is needed.  The game manager also
-	 * needs a reference to the PlayerPanel so it can show whos turn it is and who
-	 * was won the game.
-	 *
-	 * @param hc The HexCanvas object.  The HexCanvas object is created in the
-	 * JHex class.
-	 * @param pp The PlayerPanel object.  The PlayerPanel object is created in the JHex class.
+	 * The game manager needs a reference to the HexCanvas so it can
+	 * pass the HexCanvas to a HumanPlayer object, if one is needed.
+	 * The game manager also needs a reference to the PlayerPanel
+	 * so it can show whos turn it is and who was won the game.
+         *
+	 * @param hc The HexCanvas object.  The HexCanvas object is created
+         *           in the JHex class.
+	 * @param pp The PlayerPanel object.  The PlayerPanel object is
+         *            created in the JHex class.
 	 */
 
 	public GameManager( HexCanvas hc, PlayerPanel pp ) {
@@ -58,25 +59,24 @@ public class GameManager extends Thread {
 		else if( rp.equals("SneakyPete") )
 			RedPlayer = new SneakyPete();
 		else
-			System.out.println("HUH!  I don't know how to handle red player " +rp );
+			System.out.println("HUH!  I don't know how to handle "
+                                           + "red player " +rp );
 
 		if( bp.equals("Human Player") )
 			BluePlayer = new HumanPlayer( hexCanvas );
 		else if( bp.equals("Random Player") )
 			BluePlayer = new RandomPlayer();
 		else
-			System.out.println("HUH!  I don't know how to handle blue player " +bp );
+			System.out.println("HUH!  I don't know how to handle "
+                                           + "blue player " +bp );
 
 		CurrentPlayer = RedPlayer;
 
-		//gameBoard = new GameBoard( hc.iRedWidth, hc.iBlueWidth );
 		gameState = new GameState();
 
 		playerPanel.reset();
 
 		won = false;
-
-
     }
 
 	/**
@@ -171,15 +171,14 @@ public class GameManager extends Thread {
 				continue;
 			}
 			// Get a move.
-			p = CurrentPlayer.nextMove( Globals.gameBoard, gameState );
+			p = CurrentPlayer.nextMove( Globals.gameBoard,
+                                                    gameState );
 			if( p == null ) {
-				System.out.println("HUH, nextMove returned NULL.");
+				System.out.println("nextMove returned NULL.");
 				continue;
 			}
 			// check if current move is valid.
 			if( Globals.gameBoard.isOccupied( p.x, p.y ) ) {
-				System.out.println("ACK!  Player returned an illegal move ("+p.x+", "+p.y+")!");
-				//System.exit(-1);
 				continue;
 			}
 

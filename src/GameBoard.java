@@ -88,10 +88,7 @@ public class GameBoard {
 	public void move( int x, int y, int player ) {
 		board[x][y] = player;
 
-		if( player == 0 ) {
-			System.err.println("BROKEN\n");
-		}
-		else if( player == 1 ) {
+		if( player == 1 ) {
 			// Red Player
 			voltage[x+1][y+1] = -1;
 		}
@@ -103,6 +100,7 @@ public class GameBoard {
 
 		// scan over board computing the averages of the neighbours.
 		updateVoltages();
+                Globals.hexCanvas.repaint();
 
 	}
 
@@ -206,34 +204,28 @@ public class GameBoard {
 		
 	}
 
-	private void updateVoltages()
-	{
-		double volt = 0;
+        private void updateVoltages()
+        {
+            double volt = 0;
 
-		for( int a = 0; a < 50; a++ ) {
+            for( int a = 0; a < 500; a++ ) {
+                for(int i = 1; i < iRedWidth+1; i++ ) {
+                    for(int j = 1; j < iBlueWidth+1; j++ ) {
+                        if( board[i-1][j-1] == 0 ) {
+                            volt = voltage[i-1][j+1]
+                                 + voltage[i  ][j+1]
+                                 + voltage[i+1][j  ]
+                                 + voltage[i+1][j-1]
+                                 + voltage[i  ][j-1]
+                                 + voltage[i-1][j  ];
 
-			for(int i = 1; i < iRedWidth+1; i++ ) {
-				for(int j = 1; j < iBlueWidth+1; j++ ) {
-				
-					if( board[i-1][j-1] == 0 ) {
-						volt = voltage[i-1][j+1]
-						     + voltage[i  ][j+1]
-							 + voltage[i+1][j  ]
-							 + voltage[i+1][j-1]
-							 + voltage[i  ][j-1]
-							 + voltage[i-1][j  ];
-	
-						volt /= 6;
-						voltage[i][j] = volt;
-					}
-				}
-			}
-
-		}
-
-	}
-
-
+                            volt /= 6;
+                            voltage[i][j] = volt;
+                        }
+                    }
+                }
+            }
+        }
 
 }
 
