@@ -1,0 +1,32 @@
+<project name="JHex" default="dist" basedir=".">
+	<property name="src" location="src"/>
+	<property name="build" location="build"/>
+	<property name="dist" location="dist"/>
+	<property name="main.class" value="JHex"/>
+
+	<target name="dist" depends="compile">
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/JHex.jar" basedir="${build}" manifest="MANIFEST.MF" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}" />
+	</target>
+
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+	<target name="doc">
+		<javadoc  sourcepath="${src}" sourcefiles="${src}/*.java" destdir="${dist}"/>
+	</target>
+
+</project>
+
+
