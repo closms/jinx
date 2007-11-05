@@ -20,6 +20,8 @@ public class GameBoard {
 	private int[][] board;
 	public double[][] voltage;
 	private boolean[][] seen;
+        private double tmpvolt[][];
+        private double tmp[][];
 
 	/**
 	 * Construct a new GameBoard, the dimensions of the board are the parameters.
@@ -45,6 +47,8 @@ public class GameBoard {
 		board = new int[r][b];
 		seen = new boolean[r][b];
 		voltage = new double[r+2][b+2];
+		tmpvolt = new double[r+2][b+2];
+		tmp = new double[r+2][b+2];
 		for(int i = 0; i < r; i++ ) {
 			for(int j = 0; j < b; j++ ) {
 				seen[i][j] = false;
@@ -70,6 +74,26 @@ public class GameBoard {
 			voltage[0][i] = 1;
 			voltage[r+1][i] = 1;
 		}
+
+                voltage[0][0] = 0;
+                voltage[0][b+1] = 0;
+                voltage[r+1][0] = 0;
+                voltage[r+1][b+1] = 0;
+
+		for(int i = 0; i < r+2; i++ ) {
+			tmpvolt[i][0] = -1;
+			tmpvolt[i][b+1] = -1;
+		}
+
+		for(int i = 0; i < b+2; i++ ) {
+			tmpvolt[0][i] = 1;
+			tmpvolt[r+1][i] = 1;
+		}
+
+                tmpvolt[0][0] = 0;
+                tmpvolt[0][b+1] = 0;
+                tmpvolt[r+1][0] = 0;
+                tmpvolt[r+1][b+1] = 0;
 
 		updateVoltages();
 
@@ -208,7 +232,7 @@ public class GameBoard {
         {
             double volt = 0;
 
-            for( int a = 0; a < 500; a++ ) {
+            for( int a = 0; a < 100; a++ ) {
                 for(int i = 1; i < iRedWidth+1; i++ ) {
                     for(int j = 1; j < iBlueWidth+1; j++ ) {
                         if( board[i-1][j-1] == 0 ) {
@@ -220,10 +244,37 @@ public class GameBoard {
                                  + voltage[i-1][j  ];
 
                             volt /= 6;
-                            voltage[i][j] = volt;
+                            if (Math.abs(volt) < 0.001)
+                                volt = 0.0;
                         }
+                        else {
+                            volt = voltage[i][j];
+                        }
+                        tmpvolt[i][j] = volt;
                     }
                 }
+                copyMat(tmp, voltage);
+                copyMat(voltage, tmpvolt);
+                copyMat(tmpvolt, tmp);
+            }
+        }
+
+        private void copyMat(double[][] dest, double[][] src)
+        {
+            for (int x = 0; x < iRedWidth+2; x++) {
+                for (int y = 0; y < iBlueWidth+2; y++) {
+                    dest[x][y] = src[x][y];
+                }
+            }
+        }
+
+        private void prMat(double[][] mat)
+        {
+            for (int x = 0; x < iRedWidth+2; x++) {
+                for (int y = 0; y < iBlueWidth+2; y++) {
+                    System.out.print(mat[x][y]+" ");
+                }
+                System.out.println("");
             }
         }
 

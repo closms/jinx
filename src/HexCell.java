@@ -153,40 +153,134 @@ public class HexCell {
             g.drawLine( dotx+dotside, doty, dotx, doty+dotside );
             g.setColor(oc);
         }
-    if (false) {
-        /* draw background for strings. */
-        g.setColor( Color.WHITE );
-        g.fillRect( centrex - 15, centrey - 25, 50, 50 );
+        if (false) {
+            /* draw background for strings. */
+            g.setColor( Color.WHITE );
+            g.fillRect( centrex - 15, centrey - 25, 50, 50 );
 
-        /* draw strings */
-        g.setColor( Color.BLACK );
-        g.drawString( x+", "+y, centrex-15, centrey-12 );
-        String s = (new Double(Globals.gameBoard.voltage[x+1][y+1])).toString();
-        g.drawString( s.substring(0, (s.length()<8?s.length():7)),
-                      centrex-15, centrey+0  );
-        //g.drawString( s, centrex, centrey+0  );
-        /* blue voltage */
-        String bs = (new Double(bluevolt)).toString();
-        g.drawString( bs.substring(0, (bs.length()<8?bs.length():7)),
-                      centrex-15, centrey+12  );
-        /* red voltage */
-        String rs = (new Double(redvolt)).toString();
-        g.drawString( rs.substring(0, (rs.length()<8?rs.length():7)),
-                      centrex-15, centrey+24  );
+            /* draw strings */
+            g.setColor( Color.BLACK );
+            g.drawString( x+", "+y, centrex-15, centrey-12 );
+            String s = (new Double(Globals.gameBoard.voltage[x+1][y+1])).toString();
+            //g.drawString( s.substring(0, (s.length()<8?s.length():7)),
+            //        centrex-15, centrey+0  );
+            g.drawString( s, centrex-15, centrey+0  );
+            /* blue voltage */
+            String bs = (new Double(bluevolt)).toString();
+            g.drawString( bs.substring(0, (bs.length()<8?bs.length():7)),
+                    centrex-15, centrey+12  );
+            /* red voltage */
+            String rs = (new Double(redvolt)).toString();
+            g.drawString( rs.substring(0, (rs.length()<8?rs.length():7)),
+                    centrex-15, centrey+24  );
 
-        /* draw voltage arrows */
-        System.out.println("I am "+x+", "+y+", rb:"+Globals.hexCanvas.iRedWidth+","+Globals.hexCanvas.iBlueWidth);
-        /* this square is at position x, y.  When indexing the voltages array,
-         * index a, b maps to position a+1, b+1. */
-        if( x > 0 && y < (Globals.hexCanvas.iBlueWidth-1) ) {
-            System.out.println("Grr, "+(x+1)+", "+(y+1)+" : "+(x)+", "+(y+2));
-            if( Globals.gameBoard.voltage[x+1][y+1] > Globals.gameBoard.voltage[x][y+2] ) {
-                int ox = Globals.hexCanvas.hcCells[x-1][y+1].centrex;
-                int oy = Globals.hexCanvas.hcCells[x-1][y+1].centrey + 10;
-                g.drawLine( centrex, centrey - 10, ox, oy );
-                g.fillOval( ox-3, oy-3, 6, 6 );
-            }
         }
+        if (true) {
+            g.setColor(Color.BLACK);
+            /* draw voltage arrows */
+            /* this square is at position x, y.  When indexing the
+             * voltages array, index a, b maps to position a+1, b+1.
+             */
+
+            /* Draw up arrow (x-1, y+1) */
+            if (x > 0 && y < (Globals.hexCanvas.iBlueWidth-1))
+                drawArrow (centrex, centrey,
+                           Globals.hexCanvas.hcCells[x-1][y+1].centrex,
+                           Globals.hexCanvas.hcCells[x-1][y+1].centrey,
+                           (Globals.gameBoard.voltage[x+1][y+1]
+                            - Globals.gameBoard.voltage[x  ][y+2]),
+                           g);
+
+            /* Draw ne arrow (x  , y+1) */
+            if (y < (Globals.hexCanvas.iBlueWidth-1))
+                drawArrow (centrex, centrey,
+                           Globals.hexCanvas.hcCells[x  ][y+1].centrex,
+                           Globals.hexCanvas.hcCells[x  ][y+1].centrey,
+                           (Globals.gameBoard.voltage[x+1][y+1]
+                            - Globals.gameBoard.voltage[x+1][y+2]),
+                           g);
+            /* Draw se arrow (x+1, y  ) */
+            if (x < (Globals.hexCanvas.iRedWidth-1))
+                drawArrow (centrex, centrey,
+                           Globals.hexCanvas.hcCells[x+1][y  ].centrex,
+                           Globals.hexCanvas.hcCells[x+1][y  ].centrey,
+                           (Globals.gameBoard.voltage[x+1][y+1]
+                            - Globals.gameBoard.voltage[x+2][y+1]),
+                           g);
+            /* Draw dw arrow (x+1, y-1) */
+            if (x < (Globals.hexCanvas.iRedWidth-1) && y > 0)
+                drawArrow (centrex, centrey,
+                           Globals.hexCanvas.hcCells[x+1][y-1].centrex,
+                           Globals.hexCanvas.hcCells[x+1][y-1].centrey,
+                           (Globals.gameBoard.voltage[x+1][y+1]
+                            - Globals.gameBoard.voltage[x+2][y  ]),
+                           g);
+            /* Draw sw arrow (x  , y-1) */
+            if (y > 0)
+                drawArrow (centrex, centrey,
+                           Globals.hexCanvas.hcCells[x  ][y-1].centrex,
+                           Globals.hexCanvas.hcCells[x  ][y-1].centrey,
+                           (Globals.gameBoard.voltage[x+1][y+1]
+                            - Globals.gameBoard.voltage[x+1][y  ]),
+                           g);
+            /* Draw nw arrow (x-1, y  ) */
+            if (x > 0)
+                drawArrow (centrex, centrey,
+                           Globals.hexCanvas.hcCells[x-1][y  ].centrex,
+                           Globals.hexCanvas.hcCells[x-1][y  ].centrey,
+                           (Globals.gameBoard.voltage[x+1][y+1]
+                            - Globals.gameBoard.voltage[x  ][y+1]),
+                           g);
+        }
+    }
+
+    private void
+    drawArrow(double sx, double sy,
+              double ex, double ey,
+              double vdiff, Graphics g) {
+        double x1, x2, y1, y2;
+        /* Compute ab */
+        double lx = (ex - sx);
+        double ly = (ey - sy);
+        double ab = Math.sqrt(lx*lx + ly*ly);
+
+        /* len = ab/3 */
+        double len = ab / 3;
+
+        /* compute theta */
+        double theta = Math.atan( (ey-sy) / (ex-sx) );
+        if (theta < 0)
+            theta *= -1;
+
+        /* compute sp, ep */
+        if (sx < ex) {
+            x1 = sx + (len * Math.cos(theta));
+            x2 = sx + ((2*len) * Math.cos(theta));
+        }
+        else {
+            x1 = sx - (len * Math.cos(theta));
+            x2 = sx - ((2*len) * Math.cos(theta));
+        }
+        if (sy < ey) {
+            y1 = sy + (len * Math.sin(theta));
+            y2 = sy + ((2*len) * Math.sin(theta));
+        }
+        else {
+            y1 = sy - (len * Math.sin(theta));
+            y2 = sy - ((2*len) * Math.sin(theta));
+        }
+
+        /* draw line */
+        g.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+
+        /* draw head */
+        if (Math.abs(vdiff) >= 0.001) {
+            if (vdiff < 0) {
+                g.fillOval((int)x1-3, (int)y1-3, 6, 6);
+            }
+            else {
+                g.fillOval((int)x2-3, (int)y2-3, 6, 6);
+            }
         }
     }
 
