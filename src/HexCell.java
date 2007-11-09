@@ -175,7 +175,7 @@ public class HexCell {
                     centrex-15, centrey+24  );
 
         }
-        if (true) {
+        if (false) {
             g.setColor(Color.BLACK);
             /* draw voltage arrows */
             /* this square is at position x, y.  When indexing the
@@ -231,6 +231,36 @@ public class HexCell {
                            (Globals.gameBoard.voltage[x+1][y+1]
                             - Globals.gameBoard.voltage[x  ][y+1]),
                            g);
+        }
+
+        if (true) {
+            int changes;
+            double vd1, vd2;
+            changes = 0;
+            vd1 = (Globals.gameBoard.voltage[x+1][y+1]-Globals.gameBoard.voltage[x  ][y+2]);
+            vd2 = (Globals.gameBoard.voltage[x+1][y+1]-Globals.gameBoard.voltage[x+1][y+2]);
+            if (SIGNDIFF(vd1, vd2))
+                changes++;
+            vd1 = (Globals.gameBoard.voltage[x+1][y+1]-Globals.gameBoard.voltage[x+2][y+1]);
+            if (SIGNDIFF(vd2, vd1))
+                changes++;
+            vd2 = (Globals.gameBoard.voltage[x+1][y+1]-Globals.gameBoard.voltage[x+2][y  ]);
+            if (SIGNDIFF(vd1, vd2))
+                changes++;
+            vd1 = (Globals.gameBoard.voltage[x+1][y+1]-Globals.gameBoard.voltage[x+1][y  ]);
+            if (SIGNDIFF(vd2, vd1))
+                changes++;
+            vd2 = (Globals.gameBoard.voltage[x+1][y+1]-Globals.gameBoard.voltage[x  ][y+1]);
+            if (SIGNDIFF(vd1, vd2))
+                changes++;
+            vd1 = (Globals.gameBoard.voltage[x+1][y+1]-Globals.gameBoard.voltage[x  ][y+2]);
+            if (SIGNDIFF(vd2, vd1))
+                changes++;
+            if (changes > 1) {
+                g.setColor( Color.BLACK );
+                //g.drawString( ""+changes, centrex-2, centrey+2 );
+                g.fillOval(centrex-3, centrey-3, 6, 6);
+            }
         }
     }
 
@@ -350,6 +380,14 @@ public class HexCell {
 
     public void setDrawCd( boolean b ) {
         bDrawCd = b;
+    }
+
+    public boolean SIGNDIFF(double d1, double d2) {
+        if (d1 > 0. && d2 < 0.)
+            return true;
+        if (d1 < 0. && d1 > 0.)
+            return true;
+        return false;
     }
 
 }
