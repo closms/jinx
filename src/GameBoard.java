@@ -241,9 +241,12 @@ public class GameBoard {
                                  + voltage[i+1][j  ]
                                  + voltage[i+1][j-1]
                                  + voltage[i  ][j-1]
-                                 + voltage[i-1][j  ];
+                                 + voltage[i-1][j  ]
+                                 
+                                 + voltage[i+1][j+1]
+                                 + voltage[i-1][j-1];
 
-                            volt /= 6;
+                            volt /= 8;
                             if (Math.abs(volt) < 0.001)
                                 volt = 0.0;
                         }

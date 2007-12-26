@@ -106,6 +106,8 @@ public class HexCell {
     }
 
     void paint(Graphics g) {
+        double bluevolt = 0.;
+        double redvolt = 0.;
         /* draw shading */
         if( bShade ) {
             Color c = g.getColor();
@@ -114,21 +116,23 @@ public class HexCell {
             g.setColor( c );
         }
 
+        if (false) {
         /* shade according to voltage */
 
-        double bluevolt = Globals.gameBoard.voltage[x+1][y+1];
-        double redvolt = bluevolt * -1;
-        redvolt += 1;
-        redvolt /= 2;  /* clamp voltage between 0.0 and 1.0 */
-        bluevolt += 1;
-        bluevolt /= 2;  /* clamp voltage between 0.0 and 1.0 */
-        Color oldc = g.getColor();
-        Color c = new Color( (float) redvolt,
-                             (float) 0,
-                             (float) bluevolt );
-        g.setColor( c );
-        g.fillPolygon( xpts, ypts, 6 );
-        g.setColor( oldc );
+            bluevolt = Globals.gameBoard.voltage[x+1][y+1];
+            redvolt = bluevolt * -1;
+            redvolt += 1;
+            redvolt /= 2;  /* clamp voltage between 0.0 and 1.0 */
+            bluevolt += 1;
+            bluevolt /= 2;  /* clamp voltage between 0.0 and 1.0 */
+            Color oldc = g.getColor();
+            Color c = new Color( (float) redvolt,
+                                 (float) 0,
+                                 (float) bluevolt );
+            g.setColor( c );
+            g.fillPolygon( xpts, ypts, 6 );
+            g.setColor( oldc );
+        }
 
         /* draw top three lines. */
         if( bDrawAb )
